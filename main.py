@@ -53,17 +53,21 @@ def simulate_T1_rk45(rho0: np.ndarray, T1: float, t_eval: np.ndarray,
         rho = unpack_real_vec_to_complex_matrix(y, dim)
         drho = lindblad_dissipator(rho, L)
         return pack_complex_matrix_to_real_vec(drho)
-
-    sol = solve_ivp(
-        rhs,
-        t_span=(float(t_eval[0]), float(t_eval[-1])),
-        y0=y0,
-        t_eval=t_eval,
-        method="RK45",
-        rtol=rtol,
-        atol=atol,
-        max_step=max_step
-    )
+    kwargs = dict(method="RK45", rtol=rtol, atol=atol, t_eval=t_eval)
+    if max_step is not None:
+        kwargs["max_step"] = max_step
+    
+    sol = solve_ivp(rhs, (float(t_eval[0]), float(t_eval[-1])), y0, **kwargs)
+#    sol = solve_ivp(
+#        rhs,
+#        t_span=(float(t_eval[0]), float(t_eval[-1])),
+#        y0=y0,
+#        t_eval=t_eval,
+#        method="RK45",
+#        rtol=rtol,
+#        atol=atol,
+#        max_step=max_step
+#    )
     if not sol.success:
         raise RuntimeError(sol.message)
 
