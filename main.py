@@ -58,16 +58,6 @@ def simulate_T1_rk45(rho0: np.ndarray, T1: float, t_eval: np.ndarray,
         kwargs["max_step"] = max_step
     
     sol = solve_ivp(rhs, (float(t_eval[0]), float(t_eval[-1])), y0, **kwargs)
-#    sol = solve_ivp(
-#        rhs,
-#        t_span=(float(t_eval[0]), float(t_eval[-1])),
-#        y0=y0,
-#        t_eval=t_eval,
-#        method="RK45",
-#        rtol=rtol,
-#        atol=atol,
-#        max_step=max_step
-#    )
     if not sol.success:
         raise RuntimeError(sol.message)
 
