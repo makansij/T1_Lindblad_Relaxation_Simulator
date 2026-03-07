@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "t1sim"
+version = "0.1.0"
+description = "Minimal T1 Lindblad relaxation simulator (H=0) using RK45."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy", "scipy"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
