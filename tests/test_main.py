@@ -1,5 +1,5 @@
 import numpy as np
-import main  # imports your main.py as a module
+import t1sim import simulate_T1_rk45  # imports your main.py as a module
 
 
 def _p1_from_rhos(rhos: np.ndarray) -> np.ndarray:
