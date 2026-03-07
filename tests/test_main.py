@@ -1,5 +1,5 @@
 import numpy as np
-import t1sim import simulate_T1_rk45  # imports your main.py as a module
+from t1sim import simulate_T1_rk45  
 
 
 def _p1_from_rhos(rhos: np.ndarray) -> np.ndarray:
@@ -14,7 +14,7 @@ def test_p1_at_T1_is_exp_minus_1():
     t_eval = np.linspace(0, 2 * T1, 400)
 
     # max_step avoids issues on some SciPy versions if max_step=None is problematic
-    t, rhos = main.simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 200)
+    t, rhos = simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 200)
 
     p1 = _p1_from_rhos(rhos)
     idx = np.argmin(np.abs(t - T1))
@@ -28,7 +28,7 @@ def test_trace_and_hermiticity_preserved():
     T1 = 40e-6
     t_eval = np.linspace(0, 3 * T1, 300)
 
-    t, rhos = main.simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 200)
+    t, rhos = simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 200)
 
     # Trace ~ 1
     traces = np.array([np.trace(r) for r in rhos])
@@ -45,7 +45,7 @@ def test_density_matrix_is_positive_semidefinite():
     T1 = 25e-6
     t_eval = np.linspace(0, 4 * T1, 250)
 
-    t, rhos = main.simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 200)
+    t, rhos = simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 200)
 
     # eigenvalues should be >= 0 (allow tiny numerical negatives)
     mins = []
@@ -61,7 +61,7 @@ def test_p1_is_monotone_decreasing_for_excited_initial_state():
     T1 = 30e-6
     t_eval = np.linspace(0, 5 * T1, 500)
 
-    t, rhos = main.simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 300)
+    t, rhos = simulate_T1_rk45(rho0, T1, t_eval, max_step=T1 / 300)
     p1 = _p1_from_rhos(rhos)
 
     # allow tiny positive bumps from numerical error
