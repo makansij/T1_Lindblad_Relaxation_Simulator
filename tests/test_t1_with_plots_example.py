@@ -31,17 +31,18 @@ def test_trace_is_one():
 def test_script_creates_plot_files(tmp_path):
     repo_root = Path(__file__).resolve().parents[1]          # repo root
     script_path = repo_root / "examples" / "t1_with_plots.py"
+    artifacts_dir = repo_root / "artifacts"
 
     env = os.environ.copy()
     env["MPLBACKEND"] = "Agg"  # headless plotting
 
     subprocess.run(
         [sys.executable, str(script_path)],
-        cwd=tmp_path,          # so PNGs are created in tmp_path
+        cwd=tmp_path,          # output path is fixed by script (repo_root/artifacts)
         env=env,
         check=True,
         timeout=60,
     )
 
-    assert (tmp_path / "t1_relaxation.png").exists()
-    assert (tmp_path / "t1_populations_coherence.png").exists()
+    assert (artifacts_dir / "t1_relaxation.png").exists()
+    assert (artifacts_dir / "t1_populations_coherence.png").exists()

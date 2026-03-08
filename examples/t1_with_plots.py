@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # --- Operators (computational basis |0>, |1>) ---
 sigma_minus = np.array([[0, 1],
@@ -83,6 +84,9 @@ if __name__ == "__main__":
 
     T1 = 30e-6
     t_eval = np.linspace(0, 100e-6, 400)
+    repo_root = Path(__file__).resolve().parents[1]
+    artifacts_dir = repo_root / "artifacts"
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
 
     t, rhos = simulate_T1_rk45(rho0, T1, t_eval)
 
@@ -105,7 +109,7 @@ if __name__ == "__main__":
     plt.title('T1 Relaxation (Lindblad, H=0)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('t1_relaxation.png', dpi=200)
+    plt.savefig(artifacts_dir / 't1_relaxation.png', dpi=200)
 
     # Optional: show populations and coherence magnitude
     rho00 = np.real(rhos[:, 0, 0])
@@ -122,6 +126,6 @@ if __name__ == "__main__":
     plt.title('Populations and Coherence (T1-only)')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('t1_populations_coherence.png', dpi=200)
+    plt.savefig(artifacts_dir / 't1_populations_coherence.png', dpi=200)
 
     plt.show()
