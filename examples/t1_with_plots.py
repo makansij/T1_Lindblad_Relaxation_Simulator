@@ -60,16 +60,6 @@ def simulate_T1_rk45(rho0: np.ndarray, T1: float, t_eval: np.ndarray,
         kwargs["max_step"] = max_step
     
     sol = solve_ivp(rhs, (float(t_eval[0]), float(t_eval[-1])), y0, **kwargs)
-#    sol = solve_ivp(
-#        rhs,
-#        t_span=(float(t_eval[0]), float(t_eval[-1])),
-#        y0=y0,
-#        t_eval=t_eval,
-#        method="RK45",
-#        rtol=rtol,
-#        atol=atol,
-#        max_step=max_step
-#    )
     if not sol.success:
         raise RuntimeError(sol.message)
 
@@ -92,6 +82,8 @@ if __name__ == "__main__":
 
     # Excited-state population p1(t) = rho_11(t)
     p1 = np.real(rhos[:, 1, 1])
+    rho00 = np.real(rhos[:, 0, 0])
+    p0_expected = 1 - np.exp(-t / T1)
 
     # Quick print of a couple values
     print("p1(0) =", p1[0])
@@ -104,6 +96,11 @@ if __name__ == "__main__":
     plt.figure(figsize=(7, 4))
     plt.plot(t * 1e6, p1, label='Simulated p1(t)')
     plt.plot(t * 1e6, p1_expected, '--', label='Expected exp(-t/T1)')
+
+    # NEW: rho00(t)
+    plt.plot(t * 1e6, rho00, label="Simulated rho00(t)")
+    plt.plot(t * 1e6, p0_expected, "--", label="Expected 1-exp(-t/T1)")
+
     plt.xlabel('Time (µs)')
     plt.ylabel('Excited-state probability p1')
     plt.title('T1 Relaxation (Lindblad, H=0)')
