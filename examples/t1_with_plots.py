@@ -94,16 +94,16 @@ if __name__ == "__main__":
     p1_expected = np.exp(-t / T1)
 
     plt.figure(figsize=(7, 4))
-    plt.plot(t * 1e6, p1, label='Simulated p1(t)')
+    plt.plot(t * 1e6, p1, label='Simulated ρ11(t)')
     plt.plot(t * 1e6, p1_expected, '--', label='Expected exp(-t/T1)')
 
     # NEW: rho00(t)
-    plt.plot(t * 1e6, rho00, label="Simulated rho00(t)")
-    plt.plot(t * 1e6, p0_expected, "--", label="Expected 1-exp(-t/T1)")
+    plt.plot(t * 1e6, rho00, label='Simulated ρ00(t)')
+    plt.plot(t * 1e6, p0_expected, '--', label='Expected 1-exp(-t/T1)')
 
     plt.xlabel('Time (µs)')
-    plt.ylabel('Excited-state probability p1')
-    plt.title('T1 Relaxation (Lindblad, H=0)')
+    plt.ylabel('Population probability')
+    plt.title('T1 Relaxation: Populations (Lindblad, H=0)')
     plt.legend()
     plt.tight_layout()
     plt.savefig(artifacts_dir / 't1_relaxation.png', dpi=200)
@@ -111,18 +111,25 @@ if __name__ == "__main__":
     # Optional: show populations and coherence magnitude
     rho00 = np.real(rhos[:, 0, 0])
     coh01 = np.abs(rhos[:, 0, 1])
+    rho01 = rhos[:, 0, 1]
+    rho10 = rhos[:, 1, 0]
     coh_expected = coh01[0] * np.exp(-t / (2 * T1))  # expected for T1-only
 
     plt.figure(figsize=(7, 4))
-    plt.plot(t * 1e6, rho00, label='rho00(t)')
-    plt.plot(t * 1e6, p1, label='rho11(t)')
-    plt.plot(t * 1e6, coh01, label='|rho01(t)|')
-    plt.plot(t * 1e6, coh_expected, '--', label='|rho01(0)| exp(-t/(2T1))')
+    plt.plot(t * 1e6, rho00, label='ρ00(t)')
+    plt.plot(t * 1e6, p1, label='ρ11(t)')
+    plt.plot(t * 1e6, coh01, label='|ρ01(t)|')
+    plt.plot(t * 1e6, rho01.real, label='Re ρ01(t)')
+    plt.plot(t * 1e6, rho01.imag, label='Im ρ01(t)')
+    plt.plot(t * 1e6, rho10.real, '--', label='Re ρ10(t)')
+    plt.plot(t * 1e6, rho10.imag, '--', label='Im ρ10(t)')
+    plt.plot(t * 1e6, coh_expected, '--', label='Expected |ρ01(0)| exp(-t/(2T1))')
     plt.xlabel('Time (µs)')
     plt.ylabel('Value')
-    plt.title('Populations and Coherence (T1-only)')
+    plt.title('T1 Relaxation: Populations & Coherences (Lindblad, H=0)')
     plt.legend()
     plt.tight_layout()
     plt.savefig(artifacts_dir / 't1_populations_coherence.png', dpi=200)
+
 
     plt.show()
